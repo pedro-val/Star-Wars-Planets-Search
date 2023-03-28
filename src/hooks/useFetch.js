@@ -22,6 +22,8 @@ function useFetch() {
     isLoading,
     fullApiReturn,
     fetchPlanets,
+    setIsLoading,
+    setWorldReturn,
   };
 }
 

@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
-import useFetch from '../hooks/useFetch';
+import React, { useEffect, useContext } from 'react';
+import Context from '../context/Context';
 import '../App.css';
 
 function Table() {
-  const { isLoading, worldsReturn, fetchPlanets } = useFetch();
+  const state = useContext(Context);
+  const { input, handleChange, fetchPlanets, filteredArray, isLoading } = state;
 
   useEffect(() => {
     fetchPlanets('https://swapi.dev/api/planets');
@@ -11,6 +12,13 @@ function Table() {
 
   return (
     <div>
+      <input
+        type="text"
+        name="input"
+        data-testid="name-filter"
+        value={ input }
+        onChange={ (e) => handleChange(e) }
+      />
       {isLoading ? 'Carregando...' : (
         <table>
           <thead>
@@ -31,7 +39,7 @@ function Table() {
             </tr>
           </thead>
           <tbody>
-            {worldsReturn.map((world) => (
+            {filteredArray.map((world) => (
               <tr key={ world.name }>
                 <td>{ world.name }</td>
                 <td>{ world.population }</td>
