@@ -1,46 +1,40 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import Context from '../context/Context';
 
 function useFilter() {
   const state = useContext(Context);
-  const { filteredArray, setFilteredArray, setNumberOfFilters,
-    numberOfFilters } = state;
-  const [arrayWithFilters, setArrayWithFilters] = useState([]);
-  const [inputNumberValue, setInputNumberValue] = useState(0);
-  const [rangeInputValue, setRangeInputValue] = useState('maior que');
-  const [rangeInputState, setRangeInputState] = useState(['maior que',
-    'menor que', 'igual a']);
-  const [dropDownValue, setDropDownValue] = useState('population');
-  const [dropDownState, setDropDownState] = useState(['population',
-    'orbital_period',
-    'diameter',
-    'rotation_period',
-    'surface_water']);
+  const { filteredArray,
+    setFilteredArray,
+    arrayWithFilters,
+    dropDownValue,
+    rangeInputValue,
+    inputNumberValue,
+    setArrayWithFilters,
+    dropDownState,
+    setDropDownState,
+    worldsReturn,
+  } = state;
 
-  const multipleFilters = () => {
-    const filters = [...arrayWithFilters,
-      { id: arrayWithFilters.length, dropDownValue, rangeInputValue, inputNumberValue }];
-    console.log(typeof (filters[0].inputNumberValue));
-    console.log(typeof (inputNumberValue));
+  const filterReducer = (filters, worldsToFilter) => {
     const retorno = filters.reduce((acc, cur) => {
       switch (cur.rangeInputValue) {
       case 'maior que':
         if (acc.length === 0) {
-          return filteredArray.filter((world) => parseFloat(world[cur.dropDownValue])
+          return worldsToFilter.filter((world) => parseFloat(world[cur.dropDownValue])
             > cur.inputNumberValue);
         }
         return acc.filter((world) => parseFloat(world[cur.dropDownValue])
                 > cur.inputNumberValue);
       case 'menor que':
         if (acc.length === 0) {
-          return filteredArray.filter((world) => parseFloat(world[cur.dropDownValue])
+          return worldsToFilter.filter((world) => parseFloat(world[cur.dropDownValue])
             < cur.inputNumberValue);
         }
         return acc.filter((world) => parseFloat(world[cur.dropDownValue])
               < cur.inputNumberValue);
       case 'igual a':
         if (acc.length === 0) {
-          return filteredArray.filter((world) => world[cur.dropDownValue]
+          return worldsToFilter.filter((world) => world[cur.dropDownValue]
             === cur.inputNumberValue);
         }
         return acc.filter((world) => world[cur.dropDownValue]
@@ -54,24 +48,50 @@ function useFilter() {
     setArrayWithFilters(filters);
   };
 
-  const handleClick = (e) => {
+  const filterConditions = (filters, worldsToFilter) => {
+    if (filters.length > 0) {
+      filterReducer(filters, worldsToFilter);
+    } else {
+      setFilteredArray(worldsReturn);
+      setArrayWithFilters(filters);
+    }
+  };
+
+  const multipleFilters = (isAddFilter, newFilterArray) => {
+    console.log(isAddFilter);
+    console.log(newFilterArray);
+    let filters;
+    let worldsToFilter;
+    if (isAddFilter) {
+      filters = [...arrayWithFilters,
+        { id: arrayWithFilters.length,
+          dropDownValue,
+          rangeInputValue,
+          inputNumberValue }];
+      worldsToFilter = filteredArray;
+    } else {
+      filters = newFilterArray;
+      worldsToFilter = worldsReturn;
+    }
+    filterConditions(filters, worldsToFilter);
+  };
+
+  const handleClick = (e, dropDownToRemove) => {
     e.preventDefault();
-    setNumberOfFilters(numberOfFilters + 1);
-    multipleFilters();
+    setDropDownState(dropDownState.filter((option) => option !== dropDownToRemove));
+    multipleFilters(true);
+  };
+
+  const removeFilter = (id, dropDownOption) => {
+    const newArrayFiltered = arrayWithFilters.filter((filter) => filter.id !== id);
+    setArrayWithFilters(newArrayFiltered);
+    setDropDownState([...dropDownState, dropDownOption]);
+    multipleFilters(false, newArrayFiltered);
   };
 
   return {
     handleClick,
-    rangeInputState,
-    setDropDownValue,
-    dropDownValue,
-    setRangeInputValue,
-    rangeInputValue,
-    setInputNumberValue,
-    inputNumberValue,
-    setDropDownState,
-    dropDownState,
-    setRangeInputState,
+    removeFilter,
   };
 }
 

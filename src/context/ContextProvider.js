@@ -8,7 +8,17 @@ export default function ContextProvider({ children }) {
   const [fullApiReturn, setFullApiReturn] = useState({});
   const [worldsReturn, setWorldReturn] = useState([]);
   const [filteredArray, setFilteredArray] = useState([]);
-  const [numberOfFilters, setNumberOfFilters] = useState(0);
+  const [arrayWithFilters, setArrayWithFilters] = useState([]);
+  const [inputNumberValue, setInputNumberValue] = useState(0);
+  const [rangeInputValue, setRangeInputValue] = useState('maior que');
+  const [rangeInputState, setRangeInputState] = useState(['maior que',
+    'menor que', 'igual a']);
+  const [dropDownValue, setDropDownValue] = useState('population');
+  const [dropDownState, setDropDownState] = useState(['population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water']);
 
   const fetchPlanets = useCallback(async (endpoint) => {
     setIsLoading(true);
@@ -30,7 +40,7 @@ export default function ContextProvider({ children }) {
 
   const handleChangeText = ({ target }) => {
     setInputText(target.value);
-    if (numberOfFilters >= 1) {
+    if (arrayWithFilters.length > 0) {
       setFilteredArray(filteredArray.filter((world) => world.name
         .toLowerCase().includes(target.value)));
     } else {
@@ -48,8 +58,19 @@ export default function ContextProvider({ children }) {
     filteredArray,
     setFilteredArray,
     setIsLoading,
-    setNumberOfFilters,
-    numberOfFilters,
+    arrayWithFilters,
+    setArrayWithFilters,
+    inputNumberValue,
+    setInputNumberValue,
+    rangeInputValue,
+    setRangeInputValue,
+    rangeInputState,
+    setRangeInputState,
+    dropDownValue,
+    setDropDownValue,
+    dropDownState,
+    setDropDownState,
+    worldsReturn,
   };
 
   return (

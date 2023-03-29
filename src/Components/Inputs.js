@@ -4,7 +4,9 @@ import useFilter from '../hooks/useFilter';
 
 function Inputs() {
   const state = useContext(Context);
-  const { handleClick,
+  const { handleClick, removeFilter } = useFilter();
+  const { inputText,
+    handleChangeText,
     rangeInputState,
     setDropDownValue,
     dropDownValue,
@@ -12,8 +14,8 @@ function Inputs() {
     rangeInputValue,
     setInputNumberValue,
     inputNumberValue,
-    dropDownState } = useFilter();
-  const { inputText, handleChangeText } = state;
+    dropDownState,
+    arrayWithFilters } = state;
   return (
     <div>
       <form>
@@ -46,13 +48,34 @@ function Inputs() {
         />
         <button
           data-testid="button-filter"
-          onClick={ (e) => handleClick(e) }
+          // disabled={ !dropDownState.includes(dropDownValue) }
+          onClick={ (e) => handleClick(e, dropDownValue) }
         >
           Filter
 
         </button>
       </form>
-      {}
+      {arrayWithFilters.length === 0 ? <p>Sem filtros no momento</p> : (
+        arrayWithFilters.map((filter) => (
+          <span key={ filter.id }>
+            `$
+            {filter.dropDownValue}
+            {' '}
+            $
+            {filter.rangeInputValue}
+            {' '}
+            $
+            {filter.inputNumberValue}
+            `
+            <button
+              type="button"
+              onClick={ () => removeFilter(filter.id, filter.dropDownValue) }
+            >
+              ❎
+            </button>
+          </span>
+        ))
+      )}
     </div>
 
   );
