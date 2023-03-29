@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import Context from './Context';
 
 export default function ContextProvider({ children }) {
-  const [input, setInput] = useState('');
+  const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [fullApiReturn, setFullApiReturn] = useState({});
   const [worldsReturn, setWorldReturn] = useState([]);
   const [filteredArray, setFilteredArray] = useState([]);
+  const [numberOfFilters, setNumberOfFilters] = useState(0);
 
   const fetchPlanets = useCallback(async (endpoint) => {
     setIsLoading(true);
@@ -27,18 +28,28 @@ export default function ContextProvider({ children }) {
     }
   }, []);
 
-  const handleChange = ({ target }) => {
-    setInput(target.value);
-    setFilteredArray(worldsReturn.filter((world) => world.name.includes(target.value)));
+  const handleChangeText = ({ target }) => {
+    setInputText(target.value);
+    if (numberOfFilters >= 1) {
+      setFilteredArray(filteredArray.filter((world) => world.name
+        .toLowerCase().includes(target.value)));
+    } else {
+      setFilteredArray(worldsReturn.filter((world) => world.name
+        .toLowerCase().includes(target.value)));
+    }
   };
 
   const state = {
-    input,
-    handleChange,
+    inputText,
+    handleChangeText,
     fetchPlanets,
     isLoading,
     fullApiReturn,
     filteredArray,
+    setFilteredArray,
+    setIsLoading,
+    setNumberOfFilters,
+    numberOfFilters,
   };
 
   return (
