@@ -4,7 +4,7 @@ import useFilter from '../hooks/useFilter';
 
 function Inputs() {
   const state = useContext(Context);
-  const { handleClick, removeFilter } = useFilter();
+  const { handleClick, removeFilter, removeAllFilters } = useFilter();
   const { inputText,
     handleChangeText,
     rangeInputState,
@@ -15,7 +15,8 @@ function Inputs() {
     setInputNumberValue,
     inputNumberValue,
     dropDownState,
-    arrayWithFilters } = state;
+    arrayWithFilters,
+  } = state;
   return (
     <div>
       <form>
@@ -55,9 +56,20 @@ function Inputs() {
 
         </button>
       </form>
+      <button
+        data-testid="button-remove-filters"
+        type="button"
+        onClick={ removeAllFilters }
+      >
+        Remove All Filters
+
+      </button>
       {arrayWithFilters.length === 0 ? <p>Sem filtros no momento</p> : (
         arrayWithFilters.map((filter) => (
-          <span key={ filter.id }>
+          <span
+            data-testid="filter"
+            key={ filter.id }
+          >
             `$
             {filter.dropDownValue}
             {' '}

@@ -13,6 +13,7 @@ function useFilter() {
     dropDownState,
     setDropDownState,
     worldsReturn,
+    setDropDownValue,
   } = state;
 
   const filterReducer = (filters, worldsToFilter) => {
@@ -58,8 +59,6 @@ function useFilter() {
   };
 
   const multipleFilters = (isAddFilter, newFilterArray) => {
-    console.log(isAddFilter);
-    console.log(newFilterArray);
     let filters;
     let worldsToFilter;
     if (isAddFilter) {
@@ -78,6 +77,7 @@ function useFilter() {
 
   const handleClick = (e, dropDownToRemove) => {
     e.preventDefault();
+    setDropDownValue('population');
     setDropDownState(dropDownState.filter((option) => option !== dropDownToRemove));
     multipleFilters(true);
   };
@@ -89,9 +89,21 @@ function useFilter() {
     multipleFilters(false, newArrayFiltered);
   };
 
+  const removeAllFilters = () => {
+    setArrayWithFilters([]);
+    const tempFilterArray = [];
+    setDropDownState(['population',
+      'orbital_period',
+      'diameter',
+      'rotation_period',
+      'surface_water']);
+    multipleFilters(false, tempFilterArray);
+  };
+
   return {
     handleClick,
     removeFilter,
+    removeAllFilters,
   };
 }
 
