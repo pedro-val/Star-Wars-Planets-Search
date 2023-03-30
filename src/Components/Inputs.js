@@ -121,28 +121,26 @@ function Inputs() {
         Remove All Filters
 
       </button>
-      {arrayWithFilters.length === 0 ? <p>Sem filtros no momento</p> : (
+      {arrayWithFilters.length === 0 ? <p>no filters</p> : (
         arrayWithFilters.map((filter) => (
-          <span
+          <div
             data-testid="filter"
             key={ filter.id }
           >
-            `$
+            {' '}
             {filter.dropDownValue}
             {' '}
-            $
             {filter.rangeInputValue}
             {' '}
-            $
             {filter.inputNumberValue}
-            `
+            {' '}
             <button
               type="button"
               onClick={ () => removeFilter(filter.id, filter.dropDownValue) }
             >
               ❎
             </button>
-          </span>
+          </div>
         ))
       )}
     </div>
