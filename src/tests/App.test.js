@@ -3,17 +3,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
-// beforeEach(() => {
-//     global.fetch = jest.fn(() => Promise.resolve({
-//       json: () => Promise.resolve(planets),
-//     }));
-//   });
-
-//   afterEach(() => {
-//     fetch.mockClear();
-//   });
-
 describe('teste da aplicação star wars planets', () => {
+  const timeOut = 15000;
+  jest.setTimeout(timeOut);
   it('testando se todos os componentes são renderizados', async () => {
     render(<App />);
     const textBox = await screen.findByRole('textbox');
@@ -73,6 +65,27 @@ describe('teste da aplicação star wars planets', () => {
       userEvent.click(removeAllFilters);
       const tatooinee = screen.getByRole('cell', { name: /tatooine/i });
       expect(tatooinee).toBeVisible();
+      const textBox = screen.getByRole('textbox');
+      userEvent.type(textBox, 'w');
+      userEvent.selectOptions(selectElement[1], 'igual a');
+      userEvent.click(buttonFilter[0]);
+    }, { timeout: 5000 });
+  });
+  it('testando ultimos filtros', async () => {
+    render(<App />);
+    await waitFor(async () => {
+      const selectElement = screen.getAllByRole('combobox');
+      const buttonFilter = screen.getAllByRole('button');
+      userEvent.selectOptions(selectElement[0], 'diameter');
+      userEvent.selectOptions(selectElement[1], 'menor que');
+      userEvent.click(buttonFilter[0]);
+      const deleteFilter = screen.getByRole('button', { name: /❎/i });
+      userEvent.click(deleteFilter);
+      userEvent.selectOptions(selectElement[1], 'igual a');
+      userEvent.click(buttonFilter[0]);
+      const removeAllFilters = screen.getByRole('button', { name: /remove all filters/i });
+      expect(removeAllFilters).toBeInTheDocument();
+      userEvent.click(removeAllFilters);
     }, { timeout: 5000 });
   });
 });
