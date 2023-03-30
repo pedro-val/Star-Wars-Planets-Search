@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Context from '../context/Context';
 import useFilter from '../hooks/useFilter';
+import useOrdenatedFilters from '../hooks/useOrdenatedFilters';
 
 function Inputs() {
   const state = useContext(Context);
   const { handleClick, removeFilter, removeAllFilters } = useFilter();
+  const { orderList } = useOrdenatedFilters();
   const { inputText,
     handleChangeText,
     rangeInputState,
@@ -17,6 +19,13 @@ function Inputs() {
     dropDownState,
     arrayWithFilters,
   } = state;
+  const [inputFilterToOrder, setInputFilterToOrder] = useState('population');
+  const dropDownToRender = ['population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water'];
+  const [inputOrderToFilter, setInputOrderToFilter] = useState('');
   return (
     <div>
       <form>
@@ -53,6 +62,52 @@ function Inputs() {
           onClick={ (e) => handleClick(e, dropDownValue) }
         >
           Filter
+
+        </button>
+      </form>
+      <form>
+        <select
+          data-testid="column-sort"
+          onChange={ ({ target }) => setInputFilterToOrder(target.value) }
+          value={ inputFilterToOrder }
+        >
+          {dropDownToRender.map((dropDown) => (
+            <option
+              key={ dropDown }
+            >
+              {dropDown}
+
+            </option>
+          ))}
+        </select>
+        <label htmlFor="ASC">
+          ASC
+          <input
+            data-testid="column-sort-input-asc"
+            id="ASC"
+            type="radio"
+            name="radio"
+            value="ASC"
+            onChange={ ({ target }) => setInputOrderToFilter(target.value) }
+          />
+        </label>
+        <label htmlFor="DESC">
+          DESC
+          <input
+            data-testid="column-sort-input-desc"
+            id="DESC"
+            type="radio"
+            name="radio"
+            value="DESC"
+            onChange={ ({ target }) => setInputOrderToFilter(target.value) }
+          />
+        </label>
+        <button
+          type="button"
+          data-testid="column-sort-button"
+          onClick={ () => orderList(inputFilterToOrder, inputOrderToFilter) }
+        >
+          Order
 
         </button>
       </form>

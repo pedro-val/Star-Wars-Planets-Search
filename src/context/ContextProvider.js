@@ -82,7 +82,5 @@ export default function ContextProvider({ children }) {
 }
 
 ContextProvider.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-  ]).isRequired,
+  children: PropTypes.node.isRequired,
 };

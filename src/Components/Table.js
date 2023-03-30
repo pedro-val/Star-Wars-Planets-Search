@@ -36,7 +36,12 @@ function Table() {
           <tbody>
             {filteredArray.map((world) => (
               <tr key={ world.name }>
-                <td>{ world.name }</td>
+                <td
+                  data-testid="planet-name"
+                >
+                  { world.name }
+
+                </td>
                 <td>{ world.population }</td>
                 <td>{ world.climate }</td>
                 <td>{ world.diameter }</td>

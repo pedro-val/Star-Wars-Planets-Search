@@ -58,7 +58,7 @@ function useFilter() {
     }
   };
 
-  const multipleFilters = (isAddFilter, newFilterArray) => {
+  const multipleFilters = (isAddFilter, newFilterArray, ordenated) => {
     let filters;
     let worldsToFilter;
     if (isAddFilter) {
@@ -68,8 +68,11 @@ function useFilter() {
           rangeInputValue,
           inputNumberValue }];
       worldsToFilter = filteredArray;
-    } else {
+    } else if (newFilterArray.length > 0 && ordenated) {
       filters = newFilterArray;
+      worldsToFilter = filteredArray;
+    } else {
+      filters = [];
       worldsToFilter = worldsReturn;
     }
     filterConditions(filters, worldsToFilter);
@@ -104,6 +107,7 @@ function useFilter() {
     handleClick,
     removeFilter,
     removeAllFilters,
+    multipleFilters,
   };
 }
 
