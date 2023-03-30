@@ -5,11 +5,14 @@ import useFilter from './useFilter';
 const useOrdenatedFilters = () => {
   const radix = 10;
   const state = useContext(Context);
-  const { filteredArray, setFilteredArray, arrayWithFilters } = state;
+  const { filteredArray,
+    setFilteredArray,
+    arrayWithFilters,
+    inputFilterToOrder,
+    inputOrderToFilter } = state;
   const { multipleFilters } = useFilter();
 
-  const orderList = (inputFilterToOrder, inputOrderToFilter) => {
-    console.log(inputFilterToOrder, inputOrderToFilter);
+  const orderList = () => {
     if (inputOrderToFilter === 'ASC') {
       const ordenatedArray = filteredArray.sort((a, b) => parseInt(
         a[inputFilterToOrder],

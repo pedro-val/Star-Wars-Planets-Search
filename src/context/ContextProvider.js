@@ -19,6 +19,8 @@ export default function ContextProvider({ children }) {
     'diameter',
     'rotation_period',
     'surface_water']);
+  const [inputFilterToOrder, setInputFilterToOrder] = useState('population');
+  const [inputOrderToFilter, setInputOrderToFilter] = useState('');
 
   const fetchPlanets = useCallback(async (endpoint) => {
     setIsLoading(true);
@@ -71,6 +73,10 @@ export default function ContextProvider({ children }) {
     dropDownState,
     setDropDownState,
     worldsReturn,
+    inputFilterToOrder,
+    setInputFilterToOrder,
+    inputOrderToFilter,
+    setInputOrderToFilter,
   };
 
   return (

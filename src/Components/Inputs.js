@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import Context from '../context/Context';
 import useFilter from '../hooks/useFilter';
 import useOrdenatedFilters from '../hooks/useOrdenatedFilters';
@@ -18,14 +18,16 @@ function Inputs() {
     inputNumberValue,
     dropDownState,
     arrayWithFilters,
+    setInputFilterToOrder,
+    inputFilterToOrder,
+    setInputOrderToFilter,
   } = state;
-  const [inputFilterToOrder, setInputFilterToOrder] = useState('population');
   const dropDownToRender = ['population',
     'orbital_period',
     'diameter',
     'rotation_period',
     'surface_water'];
-  const [inputOrderToFilter, setInputOrderToFilter] = useState('');
+
   return (
     <div>
       <form>
@@ -105,7 +107,7 @@ function Inputs() {
         <button
           type="button"
           data-testid="column-sort-button"
-          onClick={ () => orderList(inputFilterToOrder, inputOrderToFilter) }
+          onClick={ () => orderList() }
         >
           Order
 
