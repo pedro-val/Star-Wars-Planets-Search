@@ -71,6 +71,9 @@ function useFilter() {
     } else if (newFilterArray.length > 0 && ordenated) {
       filters = newFilterArray;
       worldsToFilter = filteredArray;
+    } else if (newFilterArray.length > 0 && ordenated === undefined) {
+      filters = newFilterArray;
+      worldsToFilter = worldsReturn;
     } else {
       filters = [];
       worldsToFilter = worldsReturn;
@@ -80,8 +83,9 @@ function useFilter() {
 
   const handleClick = (e, dropDownToRemove) => {
     e.preventDefault();
-    setDropDownValue('population');
-    setDropDownState(dropDownState.filter((option) => option !== dropDownToRemove));
+    const newDropDown = dropDownState.filter((option) => option !== dropDownToRemove);
+    setDropDownState(newDropDown);
+    setDropDownValue(newDropDown.includes('population') ? 'population' : newDropDown[0]);
     multipleFilters(true);
   };
 
