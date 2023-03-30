@@ -85,7 +85,7 @@ function useFilter() {
     e.preventDefault();
     const newDropDown = dropDownState.filter((option) => option !== dropDownToRemove);
     setDropDownState(newDropDown);
-    setDropDownValue(newDropDown.includes('population') ? 'population' : newDropDown[0]);
+    setDropDownValue('population');
     multipleFilters(true);
   };
 
