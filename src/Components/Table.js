@@ -12,7 +12,7 @@ function Table() {
   }, [fetchPlanets]);
 
   return (
-    <div>
+    <div className="mainDiv">
       <Inputs />
       {isLoading ? 'Carregando...' : (
         <table>

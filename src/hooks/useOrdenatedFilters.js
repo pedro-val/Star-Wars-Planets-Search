@@ -4,7 +4,6 @@ import useFilter from './useFilter';
 
 const useOrdenatedFilters = () => {
   const radix = 10;
-  const magicNan = 999999999;
   const state = useContext(Context);
   const { filteredArray,
     setFilteredArray,
@@ -14,60 +13,32 @@ const useOrdenatedFilters = () => {
   const { multipleFilters } = useFilter();
 
   const orderList = () => {
+    const Mnumber = 1000000000001;
+    const unknownValue = Mnumber;
+    let sortedArray = [];
+
     if (inputOrderToFilter === 'ASC') {
-      const ordenatedArray = filteredArray.sort((a, b) => {
-        let valueA = parseInt(a[inputFilterToOrder], radix);
-        let valueB = parseInt(b[inputFilterToOrder], radix);
-
-        if (Number.isNaN(valueA)) {
-          valueA = magicNan;
-        }
-        if (Number.isNaN(valueB)) {
-          valueB = magicNan;
-        }
-
-        return valueA - valueB;
+      sortedArray = filteredArray.sort((a, b) => {
+        const aValue = a[inputFilterToOrder] === 'unknown'
+          ? unknownValue : parseInt(a[inputFilterToOrder], radix);
+        const bValue = b[inputFilterToOrder] === 'unknown'
+          ? unknownValue : parseInt(b[inputFilterToOrder], radix);
+        return aValue - bValue;
       });
-
-      setFilteredArray(ordenatedArray);
-      multipleFilters(false, arrayWithFilters, true);
     } else {
-      const ordenatedArray = filteredArray.sort((a, b) => {
-        let valueA = parseInt(b[inputFilterToOrder], radix);
-        let valueB = parseInt(a[inputFilterToOrder], radix);
-
-        if (Number.isNaN(valueA)) {
-          valueA = magicNan;
-        }
-        if (Number.isNaN(valueB)) {
-          valueB = magicNan;
-        }
-
-        return valueA - valueB;
+      const inifitiMinus = Number.NEGATIVE_INFINITY;
+      sortedArray = filteredArray.sort((a, b) => {
+        const aValue = a[inputFilterToOrder] === 'unknown'
+          ? inifitiMinus : parseInt(a[inputFilterToOrder], radix);
+        const bValue = b[inputFilterToOrder] === 'unknown'
+          ? inifitiMinus : parseInt(b[inputFilterToOrder], radix);
+        return bValue - aValue;
       });
-
-      setFilteredArray(ordenatedArray);
-      multipleFilters(false, arrayWithFilters, true);
     }
-  };
 
-  // const orderList = () => {
-  //   if (inputOrderToFilter === 'ASC') {
-  //     const ordenatedArray = filteredArray.sort((a, b) => parseFloat(
-  //       a[inputFilterToOrder],
-  //       radix,
-  //     ) - parseFloat(b[inputFilterToOrder], radix));
-  //     setFilteredArray(ordenatedArray);
-  //     multipleFilters(false, arrayWithFilters, true);
-  //   } else {
-  //     const ordenatedArray = filteredArray.sort((a, b) => parseFloat(
-  //       b[inputFilterToOrder],
-  //       radix,
-  //     ) - parseFloat(a[inputFilterToOrder], radix));
-  //     setFilteredArray(ordenatedArray);
-  //     multipleFilters(false, arrayWithFilters, true);
-  //   }
-  // };
+    setFilteredArray(sortedArray);
+    multipleFilters(false, arrayWithFilters, true);
+  };
 
   return {
     orderList,

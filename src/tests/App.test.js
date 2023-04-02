@@ -4,12 +4,12 @@ import userEvent from '@testing-library/user-event';
 import App from '../App';
 
 describe('teste da aplicação star wars planets', () => {
-  const timeOut = 15000;
-  jest.setTimeout(timeOut);
+  // const timeOut = 15000;
+  // jest.setTimeout(timeOut);
   it('testando se todos os componentes são renderizados', async () => {
     render(<App />);
     const textBox = await screen.findByRole('textbox');
-    await waitFor(async () => {
+    waitFor(async () => {
       const tatooine = await screen.findByRole('cell', { name: /tatooine/i });
       expect(tatooine).toBeVisible();
       userEvent.type(textBox, 'av');
@@ -19,8 +19,8 @@ describe('teste da aplicação star wars planets', () => {
   });
   it('testando filtros', async () => {
     render(<App />);
-    const textBox = await screen.findByRole('textbox');
-    await waitFor(async () => {
+    const textBox = screen.getByRole('textbox');
+    waitFor(async () => {
       const tatooine = await screen.findByRole('cell', { name: /tatooine/i });
       expect(tatooine).toBeVisible();
       userEvent.type(textBox, 'oo');
@@ -34,22 +34,31 @@ describe('teste da aplicação star wars planets', () => {
       userEvent.click(buttonFilter[0]);
       expect(screen.getByRole('button', { name: /❎/i })).toBeVisible();
       expect(screen.getByRole('cell', { name: /naboo/i })).toBeVisible();
+      userEvent.selectOptions(selectElement[0], 'surface_water');
+      userEvent.selectOptions(selectElement[1], 'igual a');
+
+      while (numberInput.value !== '') {
+        userEvent.type(numberInput, '{backspace}')
+      }
+      userEvent.type(numberInput, '12')
+      const buttonFilter1 = screen.getAllByRole('button');
+      userEvent.click(buttonFilter1[0]);
+      expect(screen.getByRole('cell', { name: /naboo/i })).toBeVisible();
     }, { timeout: 5000 });
+
   });
   it('testando filtros , opções', async () => {
     render(<App />);
-    await waitFor(async () => {
-      const tatooine = await screen.findByRole('cell', { name: /tatooine/i });
-      expect(tatooine).toBeVisible();
-      const selectElement = screen.getAllByRole('combobox');
-      userEvent.selectOptions(selectElement[0], 'population');
-      userEvent.selectOptions(selectElement[1], 'menor que');
+     waitFor(async () => {
+      const selectElement = screen.getByRole('combobox', {name: 'population'});
+      userEvent.selectOptions(selectElement, 'population');
+      const selectElementComparison = screen.getByRole('combobox', {name: 'maior que'});
       const numberInput = screen.getByRole('spinbutton');
       userEvent.type(numberInput, '30000000');
       const buttonFilter = screen.getAllByRole('button');
       userEvent.click(buttonFilter[0]);
       expect(screen.getByRole('button', { name: /❎/i })).toBeVisible();
-      expect(screen.getByRole('cell', { name: /bespin/i })).toBeVisible();
+      expect(screen.getByRole('cell', { name: /alderaan/i })).toBeVisible();
       const radioASC = screen.getByRole('radio', { name: /asc/i });
       const radioDESC = screen.getByRole('radio', { name: /desc/i });
       userEvent.click(radioASC);
@@ -73,7 +82,7 @@ describe('teste da aplicação star wars planets', () => {
   });
   it('testando ultimos filtros', async () => {
     render(<App />);
-    await waitFor(async () => {
+    waitFor(async () => {
       const selectElement = screen.getAllByRole('combobox');
       const buttonFilter = screen.getAllByRole('button');
       userEvent.selectOptions(selectElement[0], 'diameter');
