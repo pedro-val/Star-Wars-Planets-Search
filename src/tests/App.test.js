@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import ContextProvider from '../context/ContextProvider';
@@ -40,7 +40,8 @@ describe('teste da aplicação star wars planets', () => {
       userEvent.type(numberInput, '11000');
       const buttonFilter = screen.getAllByRole('button');
       userEvent.click(buttonFilter[0]);
-      expect(screen.getByRole('button', { name: /❎/i })).toBeVisible();
+      const dellButton = screen.getByRole('button', { name: /❎/i });
+      expect(dellButton).toBeVisible();
       expect(screen.getByRole('cell', { name: /naboo/i })).toBeVisible();
       userEvent.selectOptions(selectElement[0], 'surface_water');
       userEvent.selectOptions(selectElement[1], 'igual a');
@@ -52,56 +53,58 @@ describe('teste da aplicação star wars planets', () => {
       const buttonFilter1 = screen.getAllByRole('button');
       userEvent.click(buttonFilter1[0]);
       expect(screen.getByRole('cell', { name: /naboo/i })).toBeVisible();
+      const removeFilters = screen.getByRole('button', {  name: /remove all filters/i});
+      userEvent.click(removeFilters);
+      expect(screen.getByRole('cell', {  name: /yavin iv/i})).toBeVisible();
+      while (numberInput.value !== '') {
+        userEvent.type(numberInput, '{backspace}')
+      }
+      while (textBox.value !== '') {
+        userEvent.type(textBox, '{backspace}')
+      }
+      const ascButton = screen.getAllByRole('radio');
+      userEvent.click(ascButton[1]);
+      const ordernateButton = screen.getByRole('button', {  name: /order/i})
+      userEvent.click(ordernateButton);
+      const allNames = screen.getAllByTestId('planet-name');
+      expect(allNames).toHaveLength(10);
+      userEvent.click(ascButton[0]);
+      userEvent.click(ordernateButton);
+      const sortDiameter = screen.getAllByRole('combobox');
+      userEvent.selectOptions(sortDiameter[2], 'diameter');
+      userEvent.click(ordernateButton);
+      userEvent.selectOptions(sortDiameter[0], 'diameter');
+      userEvent.selectOptions(sortDiameter[1], 'menor que');
+      userEvent.type(numberInput, '12000')
+      userEvent.click(buttonFilter1[0]);
+      expect(screen.getByRole('cell', {  name: /yavin iv/i})).toBeVisible();
+      while (numberInput.value !== '') {
+        userEvent.type(numberInput, '{backspace}')
+      }
+      userEvent.selectOptions(sortDiameter[0], 'orbital_period');
+      userEvent.selectOptions(sortDiameter[1], 'maior que');
+      userEvent.type(numberInput, '500')
+      userEvent.click(buttonFilter1[0]);
+      expect(screen.getByRole('cell', {  name: /yavin iv/i})).toBeVisible();
+      userEvent.selectOptions(sortDiameter[0], 'population');
+      userEvent.selectOptions(sortDiameter[1], 'menor que');
+      while (numberInput.value !== '') {
+        userEvent.type(numberInput, '{backspace}')
+      }
+      userEvent.type(numberInput, '1500')
+      userEvent.click(buttonFilter1[0]);
+      expect(screen.getByRole('cell', {  name: /yavin iv/i})).toBeVisible();
+      userEvent.selectOptions(sortDiameter[0], 'surface_water');
+      userEvent.selectOptions(sortDiameter[1], 'igual a');
+      while (numberInput.value !== '') {
+        userEvent.type(numberInput, '{backspace}')
+      }
+      userEvent.type(numberInput, '10')
+      userEvent.click(buttonFilter1[0]);
+      const deletebuttons = screen.getAllByRole('button', { name: /❎/i })
+      expect(deletebuttons).toHaveLength(4);
+      deletebuttons.forEach((button) => userEvent.click(button));
+      const allNames1 = screen.getAllByTestId('planet-name');
+      expect(allNames1).toHaveLength(10);
   });
-  // it('testando filtros , opções', async () => {
-  //   render(
-  //     <ContextProvider>
-  //     <App />
-  //     </ContextProvider>);
-  //     const selectElement = screen.getByRole('combobox', {name: 'population'});
-  //     userEvent.selectOptions(selectElement, 'population');
-  //     const selectElementComparison = screen.getByRole('combobox', {name: 'maior que'});
-  //     const numberInput = screen.getByRole('spinbutton');
-  //     userEvent.type(numberInput, '30000000');
-  //     const buttonFilter = screen.getAllByRole('button');
-  //     userEvent.click(buttonFilter[0]);
-  //     expect(screen.getByRole('button', { name: /❎/i })).toBeVisible();
-  //     expect(screen.getByRole('cell', { name: /alderaan/i })).toBeVisible();
-  //     const radioASC = screen.getByRole('radio', { name: /asc/i });
-  //     const radioDESC = screen.getByRole('radio', { name: /desc/i });
-  //     userEvent.click(radioASC);
-  //     userEvent.click(buttonFilter[1]);
-  //     userEvent.click(radioDESC);
-  //     userEvent.click(buttonFilter[1]);
-  //     userEvent.selectOptions(selectElement[0], 'diameter');
-  //     userEvent.selectOptions(selectElement[1], 'maior que');
-  //     userEvent.click(buttonFilter[0]);
-  //     const allDellButton = screen.getAllByRole('button', { name: /❎/i });
-  //     userEvent.click(allDellButton[0]);
-  //     const removeAllFilters = screen.getByRole('button', { name: /remove all filters/i });
-  //     userEvent.click(removeAllFilters);
-  //     const tatooinee = screen.getByRole('cell', { name: /tatooine/i });
-  //     expect(tatooinee).toBeVisible();
-  //     const textBox = screen.getByRole('textbox');
-  //     userEvent.type(textBox, 'w');
-  //     userEvent.selectOptions(selectElement[1], 'igual a');
-  //     userEvent.click(buttonFilter[0]);
-  // });
-  // it('testando ultimos filtros', async () => {
-  //   render(<App />);
-  //   waitFor(async () => {
-  //     const selectElement = screen.getAllByRole('combobox');
-  //     const buttonFilter = screen.getAllByRole('button');
-  //     userEvent.selectOptions(selectElement[0], 'diameter');
-  //     userEvent.selectOptions(selectElement[1], 'menor que');
-  //     userEvent.click(buttonFilter[0]);
-  //     const deleteFilter = screen.getByRole('button', { name: /❎/i });
-  //     userEvent.click(deleteFilter);
-  //     userEvent.selectOptions(selectElement[1], 'igual a');
-  //     userEvent.click(buttonFilter[0]);
-  //     const removeAllFilters = screen.getByRole('button', { name: /remove all filters/i });
-  //     expect(removeAllFilters).toBeInTheDocument();
-  //     userEvent.click(removeAllFilters);
-  //   }, { timeout: 5000 });
-  // });
 });
